@@ -19,6 +19,7 @@ import com.j256.ormlite.dao.Dao;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+import montacer.elfazazi.ejerc3pmdmtema2.adapter.AlumnoAdapter;
 import montacer.elfazazi.ejerc3pmdmtema2.configuracion.Configuracion;
 import montacer.elfazazi.ejerc3pmdmtema2.databinding.ActivityMainBinding;
 import montacer.elfazazi.ejerc3pmdmtema2.helpers.AlumnosHelper;
@@ -30,8 +31,8 @@ public class MainActivity extends AppCompatActivity {
     private ArrayList<Alumno> listaAlumnos;
     private AlumnosHelper helper;
     private Dao<Alumno, Integer> daoAlumnos;
-   // private ProductoAdapter adapter;
-    //private RecyclerView.LayoutManager layoutManager;
+    private AlumnoAdapter adapter;
+    private RecyclerView.LayoutManager layoutManager;
 
 
     @Override
@@ -43,19 +44,19 @@ public class MainActivity extends AppCompatActivity {
 
         listaAlumnos = new ArrayList<>();
 
-       // adapter = new ProductoAdapter(MainActivity.this, listaProductos, R.layout.product_view_holder);
-       // layoutManager = new LinearLayoutManager(MainActivity.this);
+       adapter = new AlumnoAdapter(MainActivity.this, listaAlumnos, R.layout.view_alumno);
+        layoutManager = new LinearLayoutManager(MainActivity.this);
 
 
-       // binding.contentMain.contenedor.setAdapter(adapter);
-        // binding.contentMain.contenedor.setLayoutManager(layoutManager);
+        binding.contentMain.contenedor.setAdapter(adapter);
+        binding.contentMain.contenedor.setLayoutManager(layoutManager);
 
         helper = new AlumnosHelper(this, Configuracion.BD_NAME, null, Configuracion.BD_VERSION);
         if (helper != null){
             try {
                 daoAlumnos = helper.getDaoAlumnos();
                 listaAlumnos.addAll(daoAlumnos.queryForAll());
-              //  adapter.notifyItemRangeInserted(0, listaAlumnos.size());
+              adapter.notifyItemRangeInserted(0, listaAlumnos.size());
             } catch (SQLException e) {
                 throw new RuntimeException(e);
             }
@@ -103,7 +104,7 @@ public class MainActivity extends AppCompatActivity {
                             Float.parseFloat(txtNota3.getText().toString())
                     );
                     listaAlumnos.add(alumno);
-                    //adapter.notifyItemInserted(listaAlumnos.size()-1);
+                    adapter.notifyItemInserted(listaAlumnos.size()-1);
                     try {
                         daoAlumnos.create(alumno);
                         int id = daoAlumnos.extractId(alumno);
